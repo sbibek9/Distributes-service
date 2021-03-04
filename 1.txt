@@ -1,0 +1,24 @@
+import socket, sys, signal
+#from http.server import BaseHTTPRequestHandler, HTTPServer
+import time
+
+sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1) # to prevent [Errno 98] Address already in use
+add = ('',5556)
+
+sock.bind(add)
+print(f"Socket bind to {add}")
+sock.listen(5) # can be increased to 100. listens for 5 active connections.
+connections_list = []
+
+try:
+    while True:
+        c, addr = sock.accept()
+        print(f"Connection from {c.getpeername()}")
+        c.send(b"Hello sailer \n")
+        c.close()
+except KeyboardInterrupt:
+    print("Goodbye \n")
+    signal.signal(signal.SIGINT,lambda s,f: sys.exit(0))
+
+
